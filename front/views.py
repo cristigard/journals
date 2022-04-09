@@ -63,9 +63,10 @@ def export_excel(request):
 	font_style = xlwt.XFStyle()
 	#admin can retrive all users data
 	if request.user.is_admin:
-		#authenticated user can retrive his own data
+		#admin user can retrive all users data
 		data = AccountingJournal.objects.all()
 	else:
+		#authenticated user can retrive his own data
 		data = AccountingJournal.objects.filter(author = request.user)
 	#get data from database / write to xml
 	for row in data:
