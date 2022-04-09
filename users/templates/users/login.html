@@ -1,0 +1,14 @@
+{% extends 'front/base.html' %}
+{% block content %}
+<h2>Login</h2>
+<form method="POST">
+	{% load crispy_forms_tags %}
+	{% csrf_token%}
+	{{form | crispy}}
+	<br>
+	<p><button type="Submit">Login</button></p>
+	</form>
+<p>Need an account? <a href="{% url 'register' %}">Register here</a></p>
+<p style="margin-top: -15px">Forget your password? <a href="{% url 'password_reset' %}">Reset password</a></p>
+
+{% endblock content %}

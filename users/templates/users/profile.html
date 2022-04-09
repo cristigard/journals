@@ -1,0 +1,18 @@
+{% extends 'front/base.html' %}
+{% block content %}
+
+<h4>Edit profile - {{user.username}}</h4>
+{% load crispy_forms_tags %}
+<form enctype="multipart/form-data" method="POST">{% csrf_token %}
+{{form | crispy}}
+<p></p>
+
+<div id="textbox">
+  <p style="float: left;"><input type="Submit" value="Edit"></p>
+  <p style="float: left;"><a style="color: black; padding-left: 52px" href="{% url 'password_change' %}"><small>Change pasword</small></a></p>
+</div>
+
+</form>
+
+{% endblock content %}
+

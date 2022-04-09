@@ -1,0 +1,13 @@
+{% extends 'front/base.html' %}
+{% block content %}
+
+<h4>Create journal</h4>
+
+{% load crispy_forms_tags %}
+<form method="post">{% csrf_token%}
+	{{form | crispy}}
+	<p></p>
+<input type="Submit" value = "Create">
+</form>
+
+{% endblock content %}

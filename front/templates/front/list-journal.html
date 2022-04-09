@@ -1,0 +1,36 @@
+{% extends 'front/base.html' %}
+{% block content %}
+
+<h4>Journals</h4>
+{% if journals %}
+    <table style="border: 1px solid black; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid black;border-collapse: collapse;">Author</th>
+          <th style="border: 1px solid black;border-collapse: collapse;">Journal</th>
+          <th style="border: 1px solid black;border-collapse: collapse;">Date</th>
+          <th style="border: 1px solid black;border-collapse: collapse;">Time</th>
+          <th style="border: 1px solid black;border-collapse: collapse;">Price</th>
+          <th style="border: 1px solid black;border-collapse: collapse;">Message</th>
+        </tr>
+           {% for journal in journals %}
+            <tr style="border: 1px solid black;border-collapse: collapse;">
+                <td style="border: 1px solid black;">{{journal.author.username}}</td>
+                <td style="border: 1px solid black;">{{journal.journal}}</td>
+                <td style="border: 1px solid black;">{{journal.date|date:"Y-m-d"}}</td>
+                <td style="border: 1px solid black;">{{journal.time|time:"H:i:s"}}</td>
+                <td style="border: 1px solid black;">{{journal.price}}</td>
+              	<td style="border: 1px solid black;">{{journal.message}}</td>
+                {% endfor %}
+            </tr>
+      </table>
+      <br>
+      <a href="{% url 'create' %}"><input type="button" value="Add new journal" /></a>
+      <a href="{% url 'download' %}"><input type="button" value="Download data" /></a>
+      <a href="{% url 'mail' %}"><input type="button" value="Send data by email" /></a>
+{% else %}
+<h5>No journal added yet!</h5>
+<a href="{% url 'create' %}">Create one</a>
+{% endif %}
+{% endblock content %}
+
+
