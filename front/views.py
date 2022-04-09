@@ -107,11 +107,11 @@ def send_mail_excel(request):
 		ws.write(row_num, col_num, columns[col_num], font_style)
 	# Sheet body, remaining rows
 	font_style = xlwt.XFStyle()
-	#admin can retrive all users data
 	if request.user.is_admin:
-		#authenticated user can retrive his own data
+		#admin user can retrive all users data
 		data = AccountingJournal.objects.all()
 	else:
+		#authenticated user can retrive his own data
 		data = AccountingJournal.objects.filter(author = request.user)
 	#get data from database / write to xml
 	for row in data:
