@@ -28,8 +28,8 @@
             <!-- Navbar Right Side -->
             {% if user.is_authenticated %}
             <div class="navbar-nav">
-                <a style="color:white;" class="nav-link" href="{% url 'create' %}">Create</a>
-                <a style="color:white;" class="nav-link" href="{% url 'list' %}">All</a>
+                <a style="color:white;" class="nav-link" href="{% url 'create' %}">CreateJournal</a>
+                <a style="color:white;" class="nav-link" href="{% url 'list' %}">MyJournals</a>
                 <a style="color:white;" class="nav-link" href="{% url 'profile' %}">Profile</a>
                 <a style="color:white;" class="nav-link" href="{% url 'logout' %}">Logout</a>
             </div>
