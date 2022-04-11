@@ -10,6 +10,9 @@ from django.urls import reverse_lazy
 from django.conf import settings
 from io import BytesIO
 import xlwt
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
 
 
 
@@ -41,7 +44,7 @@ class JournalListView(LoginRequiredMixin, ListView):
 
 @login_required
 def export_excel(request):
-	# content-type of response
+	# create a file of ms-excel type
 	response = HttpResponse(content_type='application/ms-excel')
 	#decide file name
 	response['Content-Disposition'] = 'attachment; filename="journal.xls"'
@@ -55,7 +58,7 @@ def export_excel(request):
 	# headers are bold
 	font_style.font.bold = True
 	#column header names
-	columns = ['Author','Journal', 'Date', 'Time', 'Price', 'Message']
+	columns = ['Id', 'Author','Journal', 'Date', 'Time', 'Price', 'Message']
 	#write column headers in sheet
 	for col_num in range(len(columns)):
 		ws.write(row_num, col_num, columns[col_num], font_style)
@@ -71,20 +74,40 @@ def export_excel(request):
 	#get data from database / write to xml
 	for row in data:
 		row_num += 1
-		ws.write(row_num, 0, str(row.author.username), font_style)
-		ws.write(row_num, 1, str(row.journal), font_style)	
-		ws.write(row_num, 2, str(row.date), font_style)
-		ws.write(row_num, 3, str(row.time), font_style)
-		ws.write(row_num, 4, str(row.price), font_style)
-		ws.write(row_num, 5, str(row.message), font_style)
+		ws.write(row_num, 0, str(row.id), font_style)
+		ws.write(row_num, 1, str(row.author.username), font_style)
+		ws.write(row_num, 2, str(row.journal), font_style)	
+		ws.write(row_num, 3, str(row.date), font_style)
+		ws.write(row_num, 4, str(row.time), font_style)
+		ws.write(row_num, 5, str(row.price), font_style)
+		ws.write(row_num, 6, str(row.message), font_style)
 	wb.save(response)
 	return response
 
-	#get data from database / write to xml
-	# for row in rows:
-	# 	row_num +=1
-	# 	for col_num in range(len(row)):
-	# 		ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+@login_required
+def export_pdf(request):
+	# create a file of ms-excel type
+	response = HttpResponse(content_type='application/pdf')
+	#decide file name
+	response['Content-Disposition'] = 'attachment; filename="journal.pdf"'
+	response['Content-Transfer-Encoding'] = 'bianry'
+	if request.user.is_admin:
+		#admin user can retrive all users data
+		data = AccountingJournal.objects.all()
+	else:
+		#authenticated user can retrive his own data
+		data = AccountingJournal.objects.filter(author = request.user)
+	html_string = render_to_string('front/pdf.html', {'journals':data})
+	html = HTML(string = html_string)
+	result = html.write_pdf()
+	with tempfile.NamedTemporaryFile(delete = True) as output:
+		output.write(result)
+		output.flush()
+		output = open(output.name,'rb')
+		response.write(output.read())
+	return response
+
 
 
 @login_required
@@ -101,7 +124,7 @@ def send_mail_excel(request):
 	# headers are bold
 	font_style.font.bold = True
 	#column header names
-	columns = ['Author','Journal', 'Date', 'Time', 'Price', 'Message']
+	columns = ['Id','Author','Journal', 'Date', 'Time', 'Price', 'Message']
 	#write column headers in sheet
 	for col_num in range(len(columns)):
 		ws.write(row_num, col_num, columns[col_num], font_style)
@@ -116,12 +139,13 @@ def send_mail_excel(request):
 	#get data from database / write to xml
 	for row in data:
 		row_num += 1
-		ws.write(row_num, 0, str(row.author.username), font_style)
-		ws.write(row_num, 1, str(row.journal), font_style)	
-		ws.write(row_num, 2, str(row.date), font_style)
-		ws.write(row_num, 3, str(row.time), font_style)
-		ws.write(row_num, 4, str(row.price), font_style)
-		ws.write(row_num, 5, str(row.message), font_style)
+		ws.write(row_num, 0, str(row.id), font_style)
+		ws.write(row_num, 1, str(row.author.username), font_style)
+		ws.write(row_num, 2, str(row.journal), font_style)	
+		ws.write(row_num, 3, str(row.date), font_style)
+		ws.write(row_num, 4, str(row.time), font_style)
+		ws.write(row_num, 5, str(row.price), font_style)
+		ws.write(row_num, 6, str(row.message), font_style)
 	wb.save(excelfile)
 	#send mail
 	subject = 'Accounting Journal'
@@ -132,3 +156,6 @@ def send_mail_excel(request):
 	mail.attach('journal.xls', excelfile.getvalue(), 'application/vnd.ms-excel')
 	mail.send()
 	return render(request, 'front/mail-confirm.html')
+
+
+
