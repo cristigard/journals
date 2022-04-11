@@ -58,7 +58,7 @@ def export_excel(request):
 	# headers are bold
 	font_style.font.bold = True
 	#column header names
-	columns = ['Id', 'Author','Journal', 'Date', 'Time', 'Price', 'Message']
+	columns = ['Id', 'Owner','Journal', 'Date', 'Time', 'Price', 'Message']
 	#write column headers in sheet
 	for col_num in range(len(columns)):
 		ws.write(row_num, col_num, columns[col_num], font_style)
@@ -124,7 +124,7 @@ def send_mail_excel(request):
 	# headers are bold
 	font_style.font.bold = True
 	#column header names
-	columns = ['Id','Author','Journal', 'Date', 'Time', 'Price', 'Message']
+	columns = ['Id','Owner','Journal', 'Date', 'Time', 'Price', 'Message']
 	#write column headers in sheet
 	for col_num in range(len(columns)):
 		ws.write(row_num, col_num, columns[col_num], font_style)
