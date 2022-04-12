@@ -9,7 +9,9 @@ Journals:
 
 	path/create -> create journal
 	
-	path/download -> download journals in excel format
+	path/excel -> download journals in excel format
+	
+	path/pdf -> download journals in pdf format
 	
 	path/mail -> send journals file in excel format by email
 	
