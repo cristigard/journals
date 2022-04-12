@@ -12,8 +12,9 @@ from io import BytesIO
 import xlwt
 from django.template.loader import render_to_string
 from weasyprint import HTML
+from django_renderpdf.views import PDFView
 import tempfile
-
+import datetime
 
 
 class CreateJournalView(LoginRequiredMixin, CreateView):
@@ -36,9 +37,11 @@ class JournalListView(LoginRequiredMixin, ListView):
 	#return queryset for specific condition
 	def get_queryset(self,*args, **kwargs):
 		if self.request.user.is_admin:
-			queryset = super().get_queryset()
+			#admin user can retrive all users data
+			queryset = AccountingJournal.objects.all()
 		else:
-			queryset = super().get_queryset().filter(author=self.request.user)
+			#authenticated user can retrive his own data
+			queryset = AccountingJournal.objects.filter(author = self.request.user)
 		return queryset
 
 
@@ -47,7 +50,8 @@ def export_excel(request):
 	# create a file of ms-excel type
 	response = HttpResponse(content_type='application/ms-excel')
 	#decide file name
-	response['Content-Disposition'] = 'attachment; filename="journal.xls"'
+	# response['Content-Disposition'] = 'attachment; filename="journal.xls"'
+	response['Content-Disposition'] = 'inline; filename="mypdf.pdf"'
 	#creating workbook
 	wb = xlwt.Workbook(encoding='utf-8')
 	#adding sheet
@@ -83,31 +87,6 @@ def export_excel(request):
 		ws.write(row_num, 6, str(row.message), font_style)
 	wb.save(response)
 	return response
-
-
-@login_required
-def export_pdf(request):
-	# create a file of ms-excel type
-	response = HttpResponse(content_type='application/pdf')
-	#decide file name
-	response['Content-Disposition'] = 'attachment; filename="journal.pdf"'
-	response['Content-Transfer-Encoding'] = 'bianry'
-	if request.user.is_admin:
-		#admin user can retrive all users data
-		data = AccountingJournal.objects.all()
-	else:
-		#authenticated user can retrive his own data
-		data = AccountingJournal.objects.filter(author = request.user)
-	html_string = render_to_string('front/pdf.html', {'journals':data})
-	html = HTML(string = html_string)
-	result = html.write_pdf()
-	with tempfile.NamedTemporaryFile(delete = True) as output:
-		output.write(result)
-		output.flush()
-		output = open(output.name,'rb')
-		response.write(output.read())
-	return response
-
 
 
 @login_required
@@ -158,4 +137,29 @@ def send_mail_excel(request):
 	return render(request, 'front/mail-confirm.html')
 
 
+
+class ExportPDF(LoginRequiredMixin, PDFView):
+	# https://django-renderpdf.readthedocs.io/en/latest/
+	template_name = 'front/pdf.html'
+	prompt_download = True
+
+	def url_fetcher(url):
+		print(url)
+		return url
+
+	@property
+	#work if prompt_download = True
+	def download_name(self):
+		return f"{datetime.date.today()} - jurnal.pdf"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super().get_context_data(*args, **kwargs)
+		if self.request.user.is_admin:
+			#admin user can retrive all users data
+			data = AccountingJournal.objects.all()
+		else:
+			#authenticated user can retrive his own data
+			data = AccountingJournal.objects.filter(author = self.request.user)
+		context['journals'] = data
+		return context
 
