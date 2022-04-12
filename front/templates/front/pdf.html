@@ -7,7 +7,7 @@
 	<style>		
 	@page{
 		size: "A4";
-		margin: 2.5cm  1.5cm 3.5cm 1.5cm;
+		margin: 0.5cm  1.5cm 3.5cm 1.5cm;
 
 		@bottom-right{
 			content:"Page" counter(page) " of "counter(pages);
@@ -16,10 +16,12 @@
 	</style>
 </head>
 <body>
-<h2 style="text-align: center;">Accounting Company</h2>	
-<h4>Journals</h4>
+<div style="background-color:black">
+    <h2 style=" color: white;">Accounting Company</h2> 
+</div>
+<h3>Journals</h3>
 {% if journals %}
-    <table style="border: 1px solid black; border-collapse: collapse;">
+    <table style="border: 1px solid black; border-collapse: collapse; table-layout:table-layout: fixed; width: 100%;">
         <tr>
           <th style="border: 1px solid black;border-collapse: collapse;">Id</th>
           <th style="border: 1px solid black;border-collapse: collapse;">Owner</th>

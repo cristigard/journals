@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'front',
     #3party
     'django_cleanup.apps.CleanupConfig', #pip install django-cleanup (remove old image in profile when change to new one)
-    'crispy_forms'
+    'crispy_forms',
+    'easy_pdf',
+    'wkhtmltopdf',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
