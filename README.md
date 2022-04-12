@@ -7,30 +7,31 @@ For testing email functionality please set email and password env. vars in setti
 
 Journals:
 
-	path/create -> create journal
+	host/journal/create -> create journal
 	
-	path/excel -> download journals in excel format
+	host/journal/excel -> download journals in excel format
 	
-	path/pdf -> download journals in pdf format
+	host/journal/pdf -> download journals in pdf format
 	
-	path/mail -> send journals file in excel format by email
+	host/journal/mail -> send journals file in excel format by email
 	
-	path/list -> list all created journals
+	host/journal/list -> list all created journals
 	
-	*admin user can see journals from all users
+	*users can retrive/download only their jurnals
+	*admin user can retrive/download journals from all users
 
 
 Users:
 
-	path/ -> user login
+	host/users -> user login
 	
-	path/register -> user registration
+	host/users/register -> user registration
 	
-	path/logout -> user logout
+	host/users/logout -> user logout
 	
-	path/profile -> edit user profile
+	host/users/profile -> edit user profile
 	
-	path/password_change -> change user password
+	host/users/password_change -> change user password
 	
-	path/password_reset -> reset user password
+	host/users/password_reset -> reset user password
 	
