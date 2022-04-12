@@ -9,3 +9,4 @@ xlwt==1.3.0
 django-crispy-forms==1.14.0
 weasyprint==54.3
 'wkhtmltopdf'
+django-renderpdf==3.0.1
