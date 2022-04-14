@@ -51,7 +51,7 @@ def export_excel(request):
 	response = HttpResponse(content_type='application/ms-excel')
 	#decide file name
 	# response['Content-Disposition'] = 'attachment; filename="journal.xls"'
-	response['Content-Disposition'] = 'inline; filename="journals.xml"'
+	response['Content-Disposition'] = 'inline; filename="journals.xls"'
 	#creating workbook
 	wb = xlwt.Workbook(encoding='utf-8')
 	#adding sheet
